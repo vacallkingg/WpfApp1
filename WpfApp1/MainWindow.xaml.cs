@@ -51,8 +51,8 @@ namespace WpfApp1
         {
             InitializeComponent();
 
-            dynamic Event = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Event>>(resultString);
-            var result = new ConfigUrlsModel { ConfigUrls = configUrls };
+           /* dynamic Event = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Event>>(resultString);
+            var result = new ConfigUrlsModel { ConfigUrls = configUrls }; */
         }
     }
 }
