@@ -13,12 +13,15 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Newtonsoft;
+using System.Text.Json;
 
 namespace WpfApp1
 {
   
     public partial class MainWindow : Window
     {
+
+        private readonly string __path = $"C:\\Users\\Anton\\source\\repos\\WpfApp1\\spindleSpeedData.json";
         // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse); 
         public class Event
         {
@@ -50,9 +53,34 @@ namespace WpfApp1
         public MainWindow()
         {
             InitializeComponent();
+        }
 
-           /* dynamic Event = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Event>>(resultString);
-            var result = new ConfigUrlsModel { ConfigUrls = configUrls }; */
+        public static List<Event> Convert(string json)
+        {
+            return JsonSerializer.Deserialize<List<Event>>(json);
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        } 
+
+        private void RichTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                //https://www.youtube.com/watch?v=SholKTNGdHk
+                string jsonFromFile;
+                using (var reader = new Reader(__path))
+                {
+                    jsonFromFile = reader.ReadToEnd();
+                }
+            }
         }
     }
 }
