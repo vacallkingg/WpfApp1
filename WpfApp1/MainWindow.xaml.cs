@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Windows.Automation;
 
 namespace WpfApp1
 {
@@ -22,8 +23,47 @@ namespace WpfApp1
     public partial class MainWindow : Window
     {
 
-        private readonly string __path = $"C:\\Users\\Anton\\source\\repos\\WpfApp1\\spindleSpeedData.json";
-        public class Event
+        //private readonly string __path = $"C:\\Users\\Anton\\source\\repos\\WpfApp1\\spindleSpeedData.json";
+        private readonly string __path = $"C:\\Users\\vacal\\source\\repos\\WpfApp1\\spindleSpeedData.json";
+        public MainWindow()
+        {
+            InitializeComponent();
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string jsonFromFile;
+                using (var reader = new StreamReader(__path)) //Читает путь который задал заранее
+                {
+                    jsonFromFile = reader.ReadToEnd();
+                }
+                Payload SpindleFromJson = JsonSerializer.Deserialize<Payload>(jsonFromFile); //Десереализация
+                
+                foreach(var item in SpindleFromJson.events) //Вот здесь залупа, какой-то костыль пытаюсь сделать
+                {
+                    string toJson = Convert.ToString(item.id);//Конвертирую например id в строку 
+                    TextBoxReadJson.Text = toJson; //Пытаюсь вывести в текстбокс
+                }
+
+                
+                //TextBoxReadJson.Text = jsonFromFile;
+
+            }
+            catch { }
+        }
+
+        private void TextBoxReadJson_Scroll(object sender, System.Windows.Controls.Primitives.ScrollEventArgs e)
+        {
+
+        }
+         public class Event
         {
             public int id { get; set; }
             public int event_type_id { get; set; }
@@ -47,38 +87,6 @@ namespace WpfApp1
         {
             public string command { get; set; }
             public Payload payload { get; set; }
-        }
-
-
-        public MainWindow()
-        {
-            InitializeComponent();
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                string jsonFromFile;
-                using (var reader = new StreamReader(__path))
-                {
-                    jsonFromFile = reader.ReadToEnd();
-                }
-                var SpindleFromJson = JsonSerializer.Deserialize<Event>(jsonFromFile);
-
-                TextBoxReadJson.Text = jsonFromFile;
-            }
-            catch { }
-        }
-
-        private void TextBoxReadJson_Scroll(object sender, System.Windows.Controls.Primitives.ScrollEventArgs e)
-        {
-
-        }
+        } 
     }
 }
