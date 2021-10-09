@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Windows.Automation;
+using System.Diagnostics;
 
 namespace WpfApp1
 {
@@ -44,27 +45,30 @@ namespace WpfApp1
                 {
                     jsonFromFile = reader.ReadToEnd();
                 }
-                Payload SpindleFromJson = JsonSerializer.Deserialize<Payload>(jsonFromFile); //Десереализация
-                
-                foreach(var item in SpindleFromJson.events) //Вот здесь залупа, какой-то костыль пытаюсь сделать
-                {
-                    string toJson = Convert.ToString(item.id);//Конвертирую например id в строку 
-                    TextBoxReadJson.Text = toJson; //Пытаюсь вывести в текстбокс
-                }
+                Root SpindleFromJson = JsonSerializer.Deserialize<Root>(jsonFromFile); //Десереализация
 
-                
-                //TextBoxReadJson.Text = jsonFromFile;
+                foreach(var item in SpindleFromJson.payload.events) //Вот здесь залупа, какой-то костыль пытаюсь сделать
+                {
+                    string temp = "";
+                    string toJson = Convert.ToString(item);//Конвертирую например id в строку 
+                    temp += toJson + "\n";
+                    TextBoxReadJson.Text += temp; //Пытаюсь вывести в текстбокс
+                }
+                //Debug.WriteLine(SpindleFromJson);
+                //TextBoxReadJson.Text = SpindleFromJson.payload.events[].id.ToString();
 
             }
             catch { }
+            
         }
 
         private void TextBoxReadJson_Scroll(object sender, System.Windows.Controls.Primitives.ScrollEventArgs e)
         {
 
         }
-         public class Event
+        public class Event
         {
+            public string command { get; set; }
             public int id { get; set; }
             public int event_type_id { get; set; }
             public int workshop_id { get; set; }
