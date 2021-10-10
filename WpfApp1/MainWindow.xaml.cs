@@ -41,19 +41,32 @@ namespace WpfApp1
             try
             {
                 string jsonFromFile;
-                using (var reader = new StreamReader(__path)) //Читает путь который задал заранее
+                using (var reader = new StreamReader(__path)) 
                 {
                     jsonFromFile = reader.ReadToEnd();
                 }
-                Root SpindleFromJson = JsonSerializer.Deserialize<Root>(jsonFromFile); //Десереализация
+                Root SpindleFromJson = JsonSerializer.Deserialize<Root>(jsonFromFile);
 
-                foreach(var item in SpindleFromJson.payload.events) //Вот здесь залупа, какой-то костыль пытаюсь сделать
+
+                foreach(var item in SpindleFromJson.payload.events) 
                 {
                     string temp = "";
-                    string toJson = Convert.ToString(item);//Конвертирую например id в строку 
-                    temp += toJson + "\n";
-                    TextBoxReadJson.Text += temp; //Пытаюсь вывести в текстбокс
+                    string fromJsonID = Convert.ToString(item.id);
+                    string fromJsonEventTypeID = Convert.ToString(item.event_type_id);
+                    string fromJsonWorkshopID = Convert.ToString(item.workshop_id);
+                    string fromJsonMachineID = Convert.ToString(item.machine_id);
+                    string fromJsonTime1 = Convert.ToString(item.time1);
+                    string fromJsonFloat = Convert.ToString(item.@float);
+                    temp += "\n" + "Идентификатор события: " + fromJsonID + "\n" +
+                            "Скорость шпинделя со станка: " + fromJsonEventTypeID + "\n" +
+                            "Идентификатор цеха: " + fromJsonWorkshopID + "\n" +
+                            "Идентификатор станка: " + fromJsonMachineID + "\n" +
+                            "Время выхода: " + fromJsonTime1 + "\n" +
+                            "Скорость шпинделя во время выхода: " + fromJsonFloat + "\n" 
+                        ;
+                    TextBoxReadJson.Text += temp; 
                 }
+
                 //Debug.WriteLine(SpindleFromJson);
                 //TextBoxReadJson.Text = SpindleFromJson.payload.events[].id.ToString();
 
@@ -73,7 +86,7 @@ namespace WpfApp1
             public int event_type_id { get; set; }
             public int workshop_id { get; set; }
             public int machine_id { get; set; }
-            public object time1 { get; set; }
+            public long time1 { get; set; }
             public object time2 { get; set; }
             public object data { get; set; }
             public double @float { get; set; }
