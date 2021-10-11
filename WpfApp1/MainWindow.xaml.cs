@@ -1,22 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Windows.Automation;
-using System.Diagnostics;
+using System.Windows.Shapes;
+using System.Windows.Media;
 
 namespace WpfApp1
 {
@@ -47,8 +35,13 @@ namespace WpfApp1
                 }
                 Root SpindleFromJson = JsonSerializer.Deserialize<Root>(jsonFromFile);
 
+                var count = 0;
+                var width = canvas.ActualWidth / (Convert.ToDouble(SpindleFromJson.payload.events.Count) * 0.1);
+                double stepWidth = 0;
+                double topHeight = canvas.ActualHeight;
+                double downHeight = canvas.ActualHeight;
 
-                foreach(var item in SpindleFromJson.payload.events) 
+                foreach (var item in SpindleFromJson.payload.events) 
                 {
                     string temp = "";
                     string fromJsonID = Convert.ToString(item.id);
@@ -56,15 +49,41 @@ namespace WpfApp1
                     string fromJsonWorkshopID = Convert.ToString(item.workshop_id);
                     string fromJsonMachineID = Convert.ToString(item.machine_id);
                     string fromJsonTime1 = Convert.ToString(item.time1);
+                    DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+                    dateTime = dateTime.AddMilliseconds(Convert.ToDouble(fromJsonTime1));
                     string fromJsonFloat = Convert.ToString(item.@float);
                     temp += "\n" + "Идентификатор события: " + fromJsonID + "\n" +
                             "Скорость шпинделя со станка: " + fromJsonEventTypeID + "\n" +
                             "Идентификатор цеха: " + fromJsonWorkshopID + "\n" +
                             "Идентификатор станка: " + fromJsonMachineID + "\n" +
-                            "Время выхода: " + fromJsonTime1 + "\n" +
-                            "Скорость шпинделя во время выхода: " + fromJsonFloat + "\n" 
-                        ;
-                    TextBoxReadJson.Text += temp; 
+                            "Время выхода: " + dateTime.ToString() + "\n" +
+                            "Скорость шпинделя во время выхода: " + fromJsonFloat + "\n";
+                    // TextBoxReadJson.Text += temp; 
+                    TextBoxReadJson.AppendText(temp);
+                    count++;
+                    //if (count >= 10) break;
+
+                    var height = -canvas.ActualHeight / Convert.ToDouble(fromJsonFloat) * (-canvas.ActualHeight / 100) + 100;
+                    topHeight = downHeight;
+                    stepWidth = stepWidth + width;
+                    if (height < downHeight)
+                    {
+                        downHeight = height;
+                    }
+                    else
+                    {
+                        downHeight += height;
+                    }
+
+                    Line line = new Line();
+                    line.X1 = stepWidth - width;
+                    line.Y1 = topHeight;
+                    line.X2 = stepWidth;
+                    line.Y2 = downHeight;
+
+                    line.StrokeThickness = 1.5;
+                    line.Stroke = Brushes.Black;
+                    canvas.Children.Add(line);
                 }
 
                 //Debug.WriteLine(SpindleFromJson);
@@ -73,11 +92,6 @@ namespace WpfApp1
             }
             catch { }
             
-        }
-
-        private void TextBoxReadJson_Scroll(object sender, System.Windows.Controls.Primitives.ScrollEventArgs e)
-        {
-
         }
         public class Event
         {
@@ -104,6 +118,7 @@ namespace WpfApp1
         {
             public string command { get; set; }
             public Payload payload { get; set; }
-        } 
+        }
+
     }
 }
