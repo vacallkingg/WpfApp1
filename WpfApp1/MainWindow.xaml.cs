@@ -5,6 +5,7 @@ using System.Windows;
 using System.Text.Json;
 using System.Windows.Shapes;
 using System.Windows.Media;
+using System.Windows.Controls;
 
 namespace WpfApp1
 {
@@ -12,22 +13,23 @@ namespace WpfApp1
     public partial class MainWindow : Window
     {
 
-        //private readonly string __path = $"C:\\Users\\Anton\\source\\repos\\WpfApp1\\spindleSpeedData.json";
-        private readonly string __path = $"C:\\Users\\vacal\\source\\repos\\WpfApp1\\spindleSpeedData.json";
+        private readonly string __path = $"C:\\Users\\Anton\\source\\repos\\WpfApp1\\spindleSpeedData.json";
+        //private readonly string __path = $"C:\\Users\\vacal\\source\\repos\\WpfApp1\\spindleSpeedData.json";
         public MainWindow()
         {
             InitializeComponent();
         }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void ButtonClear(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            TextBoxReadJson.Clear();
+            canvas.Children.Clear();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void ButtonOpenJson(object sender, RoutedEventArgs e)
         {
             try
             {
+                
                 string jsonFromFile;
                 using (var reader = new StreamReader(__path)) 
                 {
@@ -35,7 +37,7 @@ namespace WpfApp1
                 }
                 Root SpindleFromJson = JsonSerializer.Deserialize<Root>(jsonFromFile);
 
-                var count = 0;
+                //var count = 0;
                 var width = canvas.ActualWidth / (Convert.ToDouble(SpindleFromJson.payload.events.Count) * 0.1);
                 double stepWidth = 0;
                 double topHeight = canvas.ActualHeight;
@@ -53,14 +55,13 @@ namespace WpfApp1
                     dateTime = dateTime.AddMilliseconds(Convert.ToDouble(fromJsonTime1));
                     string fromJsonFloat = Convert.ToString(item.@float);
                     temp += "\n" + "Идентификатор события: " + fromJsonID + "\n" +
-                            "Скорость шпинделя со станка: " + fromJsonEventTypeID + "\n" +
+                            "ID скорости шпинделя со станка: " + fromJsonEventTypeID + "\n" +
                             "Идентификатор цеха: " + fromJsonWorkshopID + "\n" +
                             "Идентификатор станка: " + fromJsonMachineID + "\n" +
                             "Время выхода: " + dateTime.ToString() + "\n" +
                             "Скорость шпинделя во время выхода: " + fromJsonFloat + "\n";
-                    // TextBoxReadJson.Text += temp; 
                     TextBoxReadJson.AppendText(temp);
-                    count++;
+                    //count++;
                     //if (count >= 10) break;
 
                     var height = -canvas.ActualHeight / Convert.ToDouble(fromJsonFloat) * (-canvas.ActualHeight / 100) + 100;
@@ -85,10 +86,6 @@ namespace WpfApp1
                     line.Stroke = Brushes.Black;
                     canvas.Children.Add(line);
                 }
-
-                //Debug.WriteLine(SpindleFromJson);
-                //TextBoxReadJson.Text = SpindleFromJson.payload.events[].id.ToString();
-
             }
             catch { }
             
@@ -120,5 +117,6 @@ namespace WpfApp1
             public Payload payload { get; set; }
         }
 
+        
     }
 }

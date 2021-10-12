@@ -5,8 +5,30 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
-        Title="MainWindow" Height="425" Width="907" ResizeMode="NoResize">
-    <Grid Margin="6,0,0,-6" HorizontalAlignment="Left" Width="915">
+        Title="MainWindow" Height="425" Width="1029" ResizeMode="NoResize">
+
+    <Window.Resources>
+        <Style x:Key="forButtonOpen">
+            <Setter Property="Control.FontFamily" Value="Verdana" />
+            <Setter Property="Control.Background" Value="#FF0898F9" />
+            <Setter Property="Control.Foreground" Value="White" />
+            <Setter Property="Control.Margin" Value="10" />
+        </Style>
+        <Style TargetType="Button" x:Key="forButtonClear">
+            <Setter Property="Control.FontFamily" Value="Verdana" />
+            <Setter Property="Control.Background" Value="#FFF97608" />
+            <Setter Property="Control.Foreground" Value="White" />
+            <Setter Property="Control.Margin" Value="10" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="Black">
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid HorizontalAlignment="Left" Width="1029">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
@@ -21,13 +43,41 @@
                 <TranslateTransform X="500" Y="500"/>
             </TransformGroup>
         </Grid.LayoutTransform>
-        <Button Content="Close" HorizontalAlignment="Left" Margin="799,342,0,0" VerticalAlignment="Top" Width="74" Click="Button_Click_1" Height="20"/>
-        <Button Content="Открыть JSON" HorizontalAlignment="Left" Margin="302,342,0,0" VerticalAlignment="Top" Click="Button_Click" Width="112" Height="20"/>
-        <TextBox HorizontalAlignment="Left" Margin="10,29,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="255" Height="333" Name="TextBoxReadJson" IsReadOnly="True" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True"/>
+        <Button x:Name="buttonOpenJson" 
+                Content="Open JSON"
+                HorizontalAlignment="Left" 
+                Margin="899,60,0,0" 
+                VerticalAlignment="Top"
+                Click="ButtonOpenJson" 
+                Width="112" Height="20"
+                ClickMode="Release" 
+                Style="{StaticResource forButtonOpen}"/>
+        <TextBox HorizontalAlignment="Left"
+                 Margin="10,29,0,0" 
+                 Text="" 
+                 TextWrapping="Wrap" 
+                 VerticalAlignment="Top" 
+                 Width="255" Height="333" 
+                 Name="TextBoxReadJson" 
+                 IsReadOnly="True" 
+                 HorizontalScrollBarVisibility="Visible" 
+                 VerticalScrollBarVisibility="Visible" 
+                 ScrollViewer.CanContentScroll="True"/>
         <Border BorderThickness="1"
-          BorderBrush="#FF000000" Margin="302,52,42,84">
-            <Canvas Name="canvas" Margin="0,0,0,-1"  />
+          BorderBrush="#FF000000" Margin="302,30,150,49">
+            <Canvas Name="canvas" Margin="0,0,0,0">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                </ScrollViewer>
+            </Canvas>
         </Border>
+        <Button x:Name="buttonClear" 
+                Content="Clear" 
+                HorizontalAlignment="Left"
+                Margin="909,341,0,0" 
+                VerticalAlignment="Top" 
+                Width="92" 
+                Click="ButtonClear" 
+                Style="{StaticResource forButtonClear}"/>
 
     </Grid>
 </Window>
