@@ -15,7 +15,8 @@ namespace WpfApp1
         private readonly string __path = $"C:\\Users\\Anton\\source\\repos\\WpfApp1\\spindleSpeedData.json";
         public MainViewModel()
         {
-            
+            MyModel = new PlotModel { Title = "" };
+
         }
         public PlotModel MyModel { get; private set; }
         private void ButtonClear(object sender, RoutedEventArgs e)
@@ -58,17 +59,16 @@ namespace WpfApp1
                             "Идентификатор станка: " + fromJsonMachineID + "\n" +
                             "Время выхода: " + dateTime.ToString() + "\n" +
                             "Скорость шпинделя во время выхода: " + fromJsonFloat + "\n";
-                    TextBoxReadJson.AppendText(temp);
-                    MyModel = new PlotModel { Title = "" };
+                    TextBoxReadJson.AppendText(temp);    
 
                     Func<double, double> batFn1 = (x) => timeforGraph;
                     //Func<double, double> batFn2 = (x) => item.time1;
 
-                    MyModel.Series.Add(new FunctionSeries(batFn1, -8, 8, 0.0001));
+                    MyModel.Series.Add(new FunctionSeries(batFn1, 0, 12000, 0.0001));
                     //MyModel.Series.Add(new FunctionSeries(batFn1, -8, 8, 0.0001));
 
                     //MyModel.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, MaximumPadding = 0.1, MinimumPadding = 0.1 });
-                   // MyModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, MaximumPadding = 0.1, MinimumPadding = 0.1 });
+                    // MyModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, MaximumPadding = 0.1, MinimumPadding = 0.1 });
 
 
 
