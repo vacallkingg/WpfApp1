@@ -9,7 +9,7 @@
         Title="JSON" Height="425" Width="1029" ResizeMode="NoResize" Background="Black" Topmost="True">
 
     <Window.DataContext>
-        <local:MainViewModel/>
+        <local:MainWindow/>
     </Window.DataContext>
 
     <Window.Resources>
@@ -65,7 +65,7 @@
             </Setter>
         </Style>
     </Window.Resources>
-    <Grid Background="#FF8F1919" Margin="0,0,-12,0">
+    <Grid Background="#FF8F1919" HorizontalAlignment="Left" Width="1028">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1029"/>
         </Grid.ColumnDefinitions>
@@ -117,7 +117,7 @@
                   VerticalAlignment="Top" 
                   Height="19" Width="129"
                   Foreground="White" 
-                  Checked="CheckBox_Checked" Background="White" BorderBrush="White"/>
+                  Checked="CheckBox_Checked" Background="White" BorderBrush="White" Unchecked="CheckForText_Unchecked"/>
 
     </Grid>
 </Window>

@@ -13,11 +13,22 @@ namespace WpfApp1
   
     public partial class MainWindow : Window
     {
+
+        //https://qna.habr.com/q/1060454#answers
+
+
+
+
         private readonly string __path = $"C:\\Users\\Anton\\source\\repos\\WpfApp1\\spindleSpeedData.json";
         public MainWindow()
         {
-            InitializeComponent();
+            MyModel = new PlotModel { Title = "Graph" };
+            MyModel.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Minimum = 0, Maximum = 12000 });
+            MyModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = 0, Maximum = 500 });
         }
+
+        public PlotModel MyModel { get; private set; }
+        public IList<DataPoint> Points { get; private set; }
         private void ButtonClear(object sender, RoutedEventArgs e)
         {
             TextBoxReadJson.Clear();
@@ -58,6 +69,16 @@ namespace WpfApp1
                             "Время выхода: " + dateTime.ToString() + "\n" +
                             "Скорость шпинделя во время выхода: " + fromJsonFloat + "\n";
                     TextBoxReadJson.AppendText(temp);
+
+                    var line1 = new LineSeries()
+                    {
+                        Title = $"Series 1",
+                        Color = OxyColors.Blue,
+                        StrokeThickness = 1,
+                    };
+                    line1.Points.Add(new DataPoint(item.time1, item.@float));
+                    MyModel.Series.Add(line1);
+
 
                     //Func<double, double> numID = (x) => Convert.ToDouble(dateTime);
                     //Func<double, double> Float = (x) => item.@float;
@@ -108,6 +129,7 @@ namespace WpfApp1
                      line.Stroke = Brushes.Black;
                      canvas.Children.Add(line); */
                 } 
+
             }
             catch { }
 
@@ -141,12 +163,12 @@ namespace WpfApp1
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            if (CheckForText.IsChecked == true)
+            TextBoxReadJson.Visibility = Visibility.Hidden;
             
-                TextBoxReadJson.Visibility = Visibility.Hidden;
-            
-            else
-                TextBoxReadJson.Visibility = Visibility.Visible; 
+        }
+        private void CheckForText_Unchecked(object sender, RoutedEventArgs e)
+        {
+            TextBoxReadJson.Visibility = Visibility.Visible;
         }
     }
 }
