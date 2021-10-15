@@ -6,10 +6,10 @@
         xmlns:local="clr-namespace:WpfApp1" 
         xmlns:oxy="http://oxyplot.org/wpf"
         mc:Ignorable="d"
-        Title="JSON" Height="425" Width="1029" ResizeMode="NoResize" Background="Black" Topmost="True">
+        Title="JSON" Height="425" Width="1029" ResizeMode="NoResize">
 
     <Window.DataContext>
-        <local:MainWindow/>
+        <local:MainViewModel/>
     </Window.DataContext>
 
     <Window.Resources>
@@ -64,6 +64,79 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <SolidColorBrush x:Key="TextBox.Static.Border" Color="#FFABAdB3"/>
+        <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="#FF7EB4EA"/>
+        <SolidColorBrush x:Key="TextBox.Focus.Border" Color="#FF569DE5"/>
+        <Style x:Key="TextBoxStyle1" TargetType="{x:Type TextBox}">
+            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource TextBox.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="AllowDrop" Value="true"/>
+            <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Border x:Name="border" CornerRadius="20" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" SnapsToDevicePixels="True">
+                            <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Opacity" TargetName="border" Value="0.56"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.MouseOver.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.Focus.Border}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsInactiveSelectionHighlightEnabled" Value="true"/>
+                        <Condition Property="IsSelectionActive" Value="false"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
+                </MultiTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="PlotViewStyle1" TargetType="{x:Type oxy:PlotView}">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="DefaultTrackerTemplate">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <oxy:TrackerControl LineExtents="{Binding PlotModel.PlotArea}" Position="{Binding Position}">
+                            <TextBlock Margin="7" Text="{Binding}"/>
+                        </oxy:TrackerControl>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ZoomRectangleTemplate">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Fill="#40FFFF00" StrokeDashArray="3,1" Stroke="Black"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type oxy:PlotView}">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="20" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
+                            <Grid x:Name="PART_Grid"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     <Grid Background="#FF8F1919" HorizontalAlignment="Left" Width="1028">
         <Grid.ColumnDefinitions>
@@ -80,7 +153,7 @@
                 <TranslateTransform X="500" Y="500"/>
             </TransformGroup>
         </Grid.LayoutTransform>
-        <oxy:PlotView Model="{Binding MyModel}" Margin="306,20,144,36"/>
+        <oxy:PlotView Style="{DynamicResource PlotViewStyle1}" Model="{Binding MyModel}" Margin="306,20,144,36" />
 
         <Button Template="{DynamicResource ButtonTemplate1}" x:Name="buttonOpenJson" 
                 Content="Open JSON"
@@ -91,7 +164,7 @@
                 Width="126" Height="37"
                 ClickMode="Release" 
                 Style="{StaticResource forButtonOpen}"/>
-        <TextBox HorizontalAlignment="Left"
+        <TextBox Style="{DynamicResource TextBoxStyle1}" HorizontalAlignment="Left"
                  Margin="10,29,0,0" 
                  Text="" 
                  TextWrapping="Wrap" 
@@ -100,7 +173,7 @@
                  Name="TextBoxReadJson" 
                  IsReadOnly="True" 
                  HorizontalScrollBarVisibility="Visible" 
-                 VerticalScrollBarVisibility="Visible" 
+                 VerticalScrollBarVisibility="Hidden" 
                  ScrollViewer.CanContentScroll="True" Visibility="Visible"/>
         <Button Template="{DynamicResource ButtonTemplate1}" x:Name="buttonClear" 
                 Content="Clear" 
